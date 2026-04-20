@@ -8,9 +8,16 @@ interface Props {
 }
 
 const EXAMPLE_TEXTS = [
-  "I have been experiencing persistent headache for the last three days, along with mild fever of 100.4°F, fatigue, and a runny nose. I also noticed some muscle aches and occasional chills.",
-  "Patient presents with shortness of breath, elevated blood pressure (145/95 mmHg), and chest tightness. History of hypertension and Type 2 diabetes. Currently on Metformin and Lisinopril.",
-  "I've had lower back pain for two weeks that radiates down my left leg. The pain worsens when sitting for long periods. I also feel numbness and tingling in my foot.",
+  "I have fever",
+  "I have headache",
+  "I have cough",
+  "I have sore throat",
+  "I have stomach pain",
+  "I have chest pain",
+  "I feel dizzy",
+  "I have body pain",
+  "I have vomiting",
+  "I have weakness",
 ];
 
 export default function AnalyzerForm({ onResult }: Props) {
@@ -19,7 +26,7 @@ export default function AnalyzerForm({ onResult }: Props) {
   const [error, setError] = useState<string | null>(null);
 
   const charCount = text.length;
-  const isValid = text.trim().length >= 30;
+  const isValid = text.trim().length >= 5;
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
@@ -45,6 +52,9 @@ export default function AnalyzerForm({ onResult }: Props) {
       const result: AnalysisResult = {
         summary: data.summary,
         keywords: data.keywords,
+        possibleCauses: data.possibleCauses,
+        careSuggestions: data.careSuggestions,
+        redFlags: data.redFlags,
         inputText: text,
         timestamp: Date.now(),
         id: crypto.randomUUID(),
@@ -66,7 +76,7 @@ export default function AnalyzerForm({ onResult }: Props) {
           <textarea
             value={text}
             onChange={(e) => setText(e.target.value)}
-            placeholder="Paste symptoms, health notes, or a medical paragraph here...&#10;&#10;Example: I have been feeling fatigued with a mild fever and persistent cough for 5 days..."
+            placeholder="Describe a symptom or paste health notes here..."
             rows={7}
             maxLength={5000}
             disabled={loading}
@@ -88,7 +98,7 @@ export default function AnalyzerForm({ onResult }: Props) {
               {charCount}/5000 characters
             </span>
             <span className="text-xs text-[#2a3f5a]">
-              Min. 30 chars required
+              Min. 5 chars required
             </span>
           </div>
         </div>
@@ -96,8 +106,18 @@ export default function AnalyzerForm({ onResult }: Props) {
         {/* Example prompts */}
         <div className="flex gap-2 flex-wrap">
           <span className="text-xs text-[#4b6280] self-center">Try:</span>
-          {["Symptoms example", "Clinical notes", "Back pain case"].map(
-            (label, i) => (
+          {[
+            "Fever",
+            "Headache",
+            "Cough",
+            "Sore throat",
+            "Stomach pain",
+            "Chest pain",
+            "Dizzy",
+            "Body pain",
+            "Vomiting",
+            "Weakness",
+          ].map((label, i) => (
               <button
                 key={label}
                 type="button"
@@ -180,7 +200,7 @@ export default function AnalyzerForm({ onResult }: Props) {
               >
                 <path d="M9 3H5a2 2 0 00-2 2v4m6-6h10a2 2 0 012 2v4M9 3v18m0 0h10a2 2 0 002-2V9M9 21H5a2 2 0 01-2-2V9m0 0h18" />
               </svg>
-              Analyze Health Text
+              Explain My Symptoms
             </span>
           )}
         </button>

@@ -4,8 +4,8 @@
  * AI Healthcare Text Analyzer
  * ⚠️ EDUCATIONAL PURPOSES ONLY — NOT FOR REAL MEDICAL DIAGNOSIS ⚠️
  *
- * This app uses a pre-trained Hugging Face model (BART-large-CNN)
- * to summarize health-related text. It is a demo project and
+ * This app uses a Hugging Face instruct model
+ * to explain health-related text. It is a demo project and
  * should never replace professional medical advice.
  */
 
@@ -20,6 +20,35 @@ import Footer from "./components/Footer";
 
 const STORAGE_KEY = "medanalyze_history";
 
+function normalizeHistoryItem(item: Partial<AnalysisResult>): AnalysisResult | null {
+  if (
+    typeof item.summary !== "string" ||
+    !Array.isArray(item.keywords) ||
+    typeof item.inputText !== "string" ||
+    typeof item.timestamp !== "number" ||
+    typeof item.id !== "string"
+  ) {
+    return null;
+  }
+
+  return {
+    summary: item.summary,
+    keywords: item.keywords.filter((value): value is string => typeof value === "string"),
+    possibleCauses: Array.isArray(item.possibleCauses)
+      ? item.possibleCauses.filter((value): value is string => typeof value === "string")
+      : [],
+    careSuggestions: Array.isArray(item.careSuggestions)
+      ? item.careSuggestions.filter((value): value is string => typeof value === "string")
+      : [],
+    redFlags: Array.isArray(item.redFlags)
+      ? item.redFlags.filter((value): value is string => typeof value === "string")
+      : [],
+    inputText: item.inputText,
+    timestamp: item.timestamp,
+    id: item.id,
+  };
+}
+
 export default function Home() {
   const [history, setHistory] = useState<AnalysisResult[]>([]);
   const [loaded, setLoaded] = useState(false);
@@ -29,7 +58,14 @@ export default function Home() {
     try {
       const stored = localStorage.getItem(STORAGE_KEY);
       if (stored) {
-        setHistory(JSON.parse(stored));
+        const parsed = JSON.parse(stored);
+        if (Array.isArray(parsed)) {
+          setHistory(
+            parsed
+              .map((item) => normalizeHistoryItem(item as Partial<AnalysisResult>))
+              .filter((item): item is AnalysisResult => item !== null)
+          );
+        }
       }
     } catch {
       // localStorage unavailable — silently ignore

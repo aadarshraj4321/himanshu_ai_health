@@ -8,6 +8,9 @@ interface Props {
 }
 
 export default function ResultCard({ result, isLatest = false }: Props) {
+  const possibleCauses = result.possibleCauses ?? [];
+  const careSuggestions = result.careSuggestions ?? [];
+  const redFlags = result.redFlags ?? [];
   const date = new Date(result.timestamp).toLocaleString(undefined, {
     month: "short",
     day: "numeric",
@@ -61,13 +64,120 @@ export default function ResultCard({ result, isLatest = false }: Props) {
               className="text-xs font-bold text-[#00d4ff] uppercase tracking-widest"
               style={{ fontFamily: "var(--font-mono)" }}
             >
-              AI Summary
+              AI Explanation
             </h3>
           </div>
           <p className="text-[#e2e8f0] text-sm leading-relaxed bg-[#0d1729]/60 rounded-xl p-4 border border-[#1e3a5f]/40">
             {result.summary}
           </p>
         </div>
+
+        {possibleCauses.length > 0 && (
+          <div>
+            <div className="flex items-center gap-2 mb-3">
+              <div className="w-5 h-5 rounded-md bg-[#38bdf8]/10 border border-[#38bdf8]/20 flex items-center justify-center flex-shrink-0">
+                <svg
+                  width="10"
+                  height="10"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="#38bdf8"
+                  strokeWidth="2.5"
+                >
+                  <path d="M12 3v18M3 12h18" />
+                </svg>
+              </div>
+              <h3
+                className="text-xs font-bold text-[#38bdf8] uppercase tracking-widest"
+                style={{ fontFamily: "var(--font-mono)" }}
+              >
+                Possible Reasons
+              </h3>
+            </div>
+            <ul className="space-y-2 text-sm text-[#cbd5e1]">
+              {possibleCauses.map((item) => (
+                <li
+                  key={item}
+                  className="rounded-xl border border-[#1e3a5f]/40 bg-[#0d1729]/40 px-4 py-3 leading-relaxed"
+                >
+                  {item}
+                </li>
+              ))}
+            </ul>
+          </div>
+        )}
+
+        {careSuggestions.length > 0 && (
+          <div>
+            <div className="flex items-center gap-2 mb-3">
+              <div className="w-5 h-5 rounded-md bg-[#10b981]/10 border border-[#10b981]/20 flex items-center justify-center flex-shrink-0">
+                <svg
+                  width="10"
+                  height="10"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="#10b981"
+                  strokeWidth="2.5"
+                >
+                  <path d="M5 12l4 4L19 6" />
+                </svg>
+              </div>
+              <h3
+                className="text-xs font-bold text-[#10b981] uppercase tracking-widest"
+                style={{ fontFamily: "var(--font-mono)" }}
+              >
+                General Care
+              </h3>
+            </div>
+            <ul className="space-y-2 text-sm text-[#cbd5e1]">
+              {careSuggestions.map((item) => (
+                <li
+                  key={item}
+                  className="rounded-xl border border-[#1e3a5f]/40 bg-[#0d1729]/40 px-4 py-3 leading-relaxed"
+                >
+                  {item}
+                </li>
+              ))}
+            </ul>
+          </div>
+        )}
+
+        {redFlags.length > 0 && (
+          <div>
+            <div className="flex items-center gap-2 mb-3">
+              <div className="w-5 h-5 rounded-md bg-[#f97316]/10 border border-[#f97316]/20 flex items-center justify-center flex-shrink-0">
+                <svg
+                  width="10"
+                  height="10"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="#f97316"
+                  strokeWidth="2.5"
+                >
+                  <path d="M12 9v4" />
+                  <path d="M12 17h.01" />
+                  <path d="M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z" />
+                </svg>
+              </div>
+              <h3
+                className="text-xs font-bold text-[#f97316] uppercase tracking-widest"
+                style={{ fontFamily: "var(--font-mono)" }}
+              >
+                When To Seek Care
+              </h3>
+            </div>
+            <ul className="space-y-2 text-sm text-[#fed7aa]">
+              {redFlags.map((item) => (
+                <li
+                  key={item}
+                  className="rounded-xl border border-orange-500/20 bg-orange-500/5 px-4 py-3 leading-relaxed"
+                >
+                  {item}
+                </li>
+              ))}
+            </ul>
+          </div>
+        )}
 
         {/* Keywords section */}
         {result.keywords.length > 0 && (

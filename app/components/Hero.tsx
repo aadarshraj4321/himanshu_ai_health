@@ -37,31 +37,9 @@ export default function Hero() {
 
       {/* Subtitle */}
       <p className="max-w-xl mx-auto text-[#94a3b8] text-base sm:text-lg leading-relaxed">
-        Paste any health-related text — symptoms, medical notes, or a health
-        article — and get an instant AI summary with key medical terms
-        highlighted.
+        Describe your symptoms in plain language and get an AI explanation,
+        possible reasons, general care ideas, and warning signs to watch for.
       </p>
-
-      {/* Stats row */}
-      <div className="mt-8 flex justify-center gap-8 flex-wrap">
-        {[
-          { label: "Model", value: "BART-Large" },
-          { label: "Source", value: "Hugging Face" },
-          { label: "Storage", value: "Local Only" },
-        ].map((s) => (
-          <div key={s.label} className="text-center">
-            <p
-              className="text-lg font-bold text-[#00d4ff]"
-              style={{ fontFamily: "var(--font-mono)" }}
-            >
-              {s.value}
-            </p>
-            <p className="text-xs text-[#4b6280] uppercase tracking-wider mt-0.5">
-              {s.label}
-            </p>
-          </div>
-        ))}
-      </div>
     </section>
   );
 }
